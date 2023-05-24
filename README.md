@@ -40,7 +40,15 @@ plugins {
 In your *project's* build.gradle, `apply plugin` and add the `cargo` configuration:
 
 ```groovy
-android { ... }
+android {
+    packagingOptions {
+        resources {
+            excludes += '/META-INF/{AL2.0,LGPL2.1}'
+        }
+        doNotStrip "**/lib${libname}.so"
+    }
+    //...
+}
 
 apply plugin: 'org.mozilla.rust-android-gradle.rust-android'
 
@@ -90,7 +98,7 @@ the `cargo` configuration through the `libname` and/or `targetIncludes` options.
 defaults to `["lib${libname}.so", "lib${libname}.dylib", "{$libname}.dll"]`, so the following configuration will
 include all `libbackend` libraries generated in the Rust project in `../rust`:
 
-```
+```gradle
 cargo {
     module = "../rust"
     libname = "backend"
